@@ -4,13 +4,12 @@ from dotenv import load_dotenv
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
 
-
 import asyncio
 import os
 import pandas as pd
 
 
-async def get_tasks_async():
+async def get_all_tasks():
     try:
         tasks = await api.get_tasks()
         return [task.to_dict() for task in tasks]
@@ -102,15 +101,26 @@ async def main():
         await create_multiple_tasks(new_task=new_task)
 
     elif action == 'delete':
-        pass
+        tasks = await get_all_tasks()
+        df = pd.DataFrame(tasks)
+        grouped_df = df.groupby(['content'])['id'].apply(list).reset_index(name='ids')
+
+        index_to_delete = await inquirer.checkbox(
+            message="Select recurrent tasks to delete:",
+            cycle=True,
+            choices=[ Choice(index, row['content']) for index, row in grouped_df.iterrows() ],
+            validate=lambda result: len(result) >= 1,
+            invalid_message="should be at least 1 selection",
+            instruction="(select at least 1)"
+        ).execute_async()
+
+        proceed = inquirer.confirm(message="Are you sure you want to delete this task?", default=False).execute()
+        if proceed:
+            for id in grouped_df.iloc[index_to_delete['ids']]:
+                await delete_task(id)
+
     else:
         raise Exception('Unknown option specified!')
-
-
-async def get_all_tasks():
-    tasks_dict = await get_tasks_async()
-    df = pd.DataFrame.from_dict(tasks_dict)
-    print(df.head())
 
 
 if __name__ == '__main__':
