@@ -51,8 +51,7 @@ async def create_multiple_tasks(new_task: dict):
 
 async def delete_task(task_to_delete: int):
     try:
-        is_success = await api.delete_task(task_id=task_to_delete)
-        print(is_success)
+        return await api.delete_task(task_id=task_to_delete)
     except Exception as error:
         print(error)
 
@@ -114,10 +113,13 @@ async def main():
             instruction="(select at least 1)"
         ).execute_async()
 
-        proceed = inquirer.confirm(message="Are you sure you want to delete this task?", default=False).execute()
+        print(index_to_delete)
+        proceed = await inquirer.confirm(message="Are you sure you want to delete these tasks?", default=False).execute_async()
         if proceed:
-            for id in grouped_df.iloc[index_to_delete['ids']]:
-                await delete_task(id)
+            for i_to_delete in index_to_delete:
+                result = [await delete_task(id) for id in grouped_df.iloc[i_to_delete]['ids']]
+                if all(result):
+                    print("Tasks successfully deleted!")
 
     else:
         raise Exception('Unknown option specified!')
