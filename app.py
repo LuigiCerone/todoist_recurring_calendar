@@ -1,12 +1,6 @@
 from typing import List
-from todoist_api_python.api_async import TodoistAPIAsync
-from dotenv import load_dotenv
-
-from InquirerPy import inquirer
-from InquirerPy.base.control import Choice
 
 import asyncio
-import os
 import pandas as pd
 
 from utils.cli_interface import get_delete_tasks_info, get_new_task_info, get_user_action
@@ -51,7 +45,4 @@ async def main():
 
 
 if __name__ == '__main__':
-    load_dotenv()
-    api = TodoistAPIAsync(os.getenv('TOKEN'))
-
     asyncio.get_event_loop().run_until_complete(main())

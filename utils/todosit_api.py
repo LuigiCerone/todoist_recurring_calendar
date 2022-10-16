@@ -1,3 +1,11 @@
+from todoist_api_python.api_async import TodoistAPIAsync
+from dotenv import load_dotenv
+
+import os
+
+load_dotenv()
+api = TodoistAPIAsync(os.getenv('TOKEN'))
+
 async def get_all_tasks():
     try:
         tasks = await api.get_tasks()
@@ -35,7 +43,7 @@ async def create_task(content: str, day: str, section_id: int):
 
 async def create_multiple_tasks(new_task: dict):
     for day in new_task['days']:
-        t = await create_task(content=new_task['content'], day=day, section_id=new_task['section_id'])
+        t = await create_task(content=new_task['content'], day=day, section_id=new_task.get('section_id', None))
 
 
 async def delete_task(task_to_delete: int):

@@ -1,3 +1,4 @@
+import secrets
 from typing import List
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
@@ -42,11 +43,13 @@ async def get_new_task_info() -> dict:
         choices=[Choice(p.id, p.name) for p in await get_all_projects()]
     ).execute_async()
 
-    new_task['section_id'] = await inquirer.select(
-        message='Select the section in project to which you want to assign these tasks:',
-        default=None,
-        choices=[Choice(s.id, s.name) for s in await get_all_sections_for_project(new_task['project_id'])]
-    ).execute_async()
+    sections = await get_all_sections_for_project(new_task['project_id'])
+    if sections:
+        new_task['section_id'] = await inquirer.select(
+            message='Select the section in project to which you want to assign these tasks:',
+            default=None,
+            choices=[Choice(s.id, s.name) for s in sections]
+        ).execute_async()
 
     return new_task
 
