@@ -1,10 +1,11 @@
-from todoist_api_python.api_async import TodoistAPIAsync
-from dotenv import load_dotenv
-
 import os
 
+from dotenv import load_dotenv
+from todoist_api_python.api_async import TodoistAPIAsync
+
 load_dotenv()
-api = TodoistAPIAsync(os.getenv('TOKEN'))
+api = TodoistAPIAsync(os.getenv("TOKEN"))
+
 
 async def get_all_tasks():
     try:
@@ -19,7 +20,7 @@ async def get_all_projects():
         return await api.get_projects()
     except Exception as error:
         print(error)
-    
+
 
 async def get_all_sections_for_project(project_id: int):
     try:
@@ -32,9 +33,9 @@ async def create_task(content: str, day: str, section_id: int):
     try:
         task = await api.add_task(
             content=content,
-            due_string=f'every {day}',
+            due_string=f"every {day}",
             section_id=section_id,
-            due_lang='en'
+            due_lang="en",
         )
         return task
     except Exception as error:
@@ -42,8 +43,12 @@ async def create_task(content: str, day: str, section_id: int):
 
 
 async def create_multiple_tasks(new_task: dict):
-    for day in new_task['days']:
-        t = await create_task(content=new_task['content'], day=day, section_id=new_task.get('section_id', None))
+    for day in new_task["days"]:
+        await create_task(
+            content=new_task["content"],
+            day=day,
+            section_id=new_task.get("section_id", None),
+        )
 
 
 async def delete_task(task_to_delete: int):
