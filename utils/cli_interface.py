@@ -8,6 +8,11 @@ from utils.todosit_api import get_all_projects, get_all_sections_for_project
 
 
 async def get_user_action() -> str:
+    """Method used to request to the user an action
+
+    Returns:
+        str: Requested user action
+    """
     return await inquirer.select(
         message="How do you want to edit your todoist?",
         choices=[
@@ -18,6 +23,11 @@ async def get_user_action() -> str:
 
 
 async def get_new_task_info() -> dict:
+    """Method used to collect all the new task information from the user
+
+    Returns:
+        dict: Dictionary containing all the new task information required to create it
+    """
     new_task = dict()
     new_task["content"] = await inquirer.text(
         message="What is the new task you want to work on?"
@@ -57,6 +67,14 @@ async def get_new_task_info() -> dict:
 
 
 async def get_delete_tasks_info(df: DataFrame) -> List[int]:
+    """Method used to collect all the information about the task we want to delete
+
+    Args:
+        df (DataFrame): Dataframe with recurrent tasks information along with a unique row identifier
+
+    Returns:
+        List[int]: List of all the Dataframe indexes that needs to be deleted. One index may contain multple task ids
+    """
     indexes_to_delete = await inquirer.checkbox(
         message="Select recurrent tasks to delete:",
         cycle=True,
