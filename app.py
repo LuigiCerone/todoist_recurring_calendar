@@ -40,7 +40,7 @@ async def delete_recurrent_tasks(df: pd.DataFrame, indexes_to_delete: List[int])
         List[bool]: list of boolean flags
     """
     for i_to_delete in indexes_to_delete:
-        return [].extends([await delete_task(id) for id in df.iloc[i_to_delete]["ids"]])
+        [await delete_task(id) for id in df.iloc[i_to_delete]["ids"]]
 
 
 async def delete_multiple_tasks():
@@ -49,9 +49,8 @@ async def delete_multiple_tasks():
 
     indexes_to_delete = await get_delete_tasks_info(df)
     if indexes_to_delete:
-        result = await delete_recurrent_tasks(df, indexes_to_delete)
-        if all(result):
-            print("Tasks successfully deleted!")
+        await delete_recurrent_tasks(df, indexes_to_delete)
+        print("Tasks successfully deleted!")
 
 
 async def main():
