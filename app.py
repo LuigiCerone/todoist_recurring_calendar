@@ -17,19 +17,19 @@ async def create_new_tasks():
     await create_multiple_tasks(new_task=new_task)
 
 
-async def get_recurrent_tasks_df() -> pd.DataFrame:
+async def get_recurring_tasks_df() -> pd.DataFrame:
     """Method used to retrieve all tasks information. Then, a dataframe is created with this information.
-    Finally, the method looks for task ids associated to recurrent istances of the same principal task
+    Finally, the method looks for task ids associated to recurring istances of the same principal task
 
     Returns:
-        pd.DataFrame: Dataframe with recurrent tasks information along with a unique row identifier
+        pd.DataFrame: Dataframe with recurring tasks information along with a unique row identifier
     """
     tasks = await get_all_tasks()
     df = pd.DataFrame(tasks)
     return df.groupby(["content"])["id"].apply(list).reset_index(name="ids")
 
 
-async def delete_recurrent_tasks(df: pd.DataFrame, indexes_to_delete: List[int]):
+async def delete_recurring_tasks(df: pd.DataFrame, indexes_to_delete: List[int]):
     """Method used to coordinate the deletion of all the task instances associated to a principal task
 
     Args:
@@ -45,11 +45,11 @@ async def delete_recurrent_tasks(df: pd.DataFrame, indexes_to_delete: List[int])
 
 async def delete_multiple_tasks():
     """Method used to coordinate the deletion of a recurring task"""
-    df = await get_recurrent_tasks_df()
+    df = await get_recurring_tasks_df()
 
     indexes_to_delete = await get_delete_tasks_info(df)
     if indexes_to_delete:
-        await delete_recurrent_tasks(df, indexes_to_delete)
+        await delete_recurring_tasks(df, indexes_to_delete)
         print("Tasks successfully deleted!")
 
 

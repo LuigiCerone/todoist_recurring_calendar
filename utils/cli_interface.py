@@ -16,8 +16,8 @@ async def get_user_action() -> str:
     return await inquirer.select(
         message="How do you want to edit your todoist?",
         choices=[
-            Choice("create", "Create new recurrent task"),
-            Choice("delete", "Delete a bunch of recurrent stuff"),
+            Choice("create", "Create new recurring task"),
+            Choice("delete", "Delete a bunch of recurring stuff"),
         ],
     ).execute_async()
 
@@ -33,7 +33,7 @@ async def get_new_task_info() -> dict:
         message="What is the new task you want to work on?"
     ).execute_async()
     new_task["days"] = await inquirer.checkbox(
-        message="Pick your recurrent days:",
+        message="Pick your recurring days:",
         cycle=True,
         choices=[
             "Sunday",
@@ -70,13 +70,13 @@ async def get_delete_tasks_info(df: DataFrame) -> List[int]:
     """Method used to collect all the information about the task we want to delete
 
     Args:
-        df (DataFrame): Dataframe with recurrent tasks information along with a unique row identifier
+        df (DataFrame): Dataframe with recurring tasks information along with a unique row identifier
 
     Returns:
         List[int]: List of all the Dataframe indexes that needs to be deleted. One index may contain multple task ids
     """
     indexes_to_delete = await inquirer.checkbox(
-        message="Select recurrent tasks to delete:",
+        message="Select recurring tasks to delete:",
         cycle=True,
         choices=[Choice(index, row["content"]) for index, row in df.iterrows()],
         validate=lambda result: len(result) >= 1,

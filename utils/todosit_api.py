@@ -52,7 +52,7 @@ async def create_task(content: str, day: str, section_id: int):
 
     Args:
         content (str): The new task's content
-        day (str): The new task's recurrent days
+        day (str): The new task's recurring days
         section_id (int): The new task's section identifier
 
     Returns:
