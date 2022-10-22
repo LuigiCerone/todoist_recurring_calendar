@@ -19,28 +19,9 @@ The purpose of this small project is to automate the creation of such repeated i
 
 Tested with:
 
-- Docker: 20.10.13
 - Python: 3.9.4
 
-## How to build
-
-```bash
-docker build -t todoist_recurring_tasks .
-```
-
 ## How to run
-
-### With Docker
-
-```bash
-# Run
-docker run --name todoist-recurring-tasks -e TOKEN MY_SECRET_TOKEN -i todoist_recurring_tasks
-
-# To restart
-docker start -ai todoist-recurring-tasks
-```
-
-### Without Docker
 
 #### Setup venv
 
