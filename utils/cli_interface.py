@@ -6,6 +6,16 @@ from pandas import DataFrame
 
 from utils.todosit_api import get_all_projects, get_all_sections_for_project
 
+days_of_week = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+]
+
 
 async def get_user_action() -> str:
     """Method used to request to the user an action
@@ -22,6 +32,25 @@ async def get_user_action() -> str:
     ).execute_async()
 
 
+def flatten_array(arr):
+    """Method used to flatten nested arrays
+
+    Args:
+        arr (List<Ant>): Nested array to flatten
+
+    Returns:
+        List<Any>: Flattened array
+    """
+    result = set()
+    for sublist in arr:
+        if isinstance(sublist, str):
+            result.add(sublist)
+        else:
+            for item in sublist:
+                result.add(item)
+    return list(result)
+
+
 async def get_new_task_info() -> dict:
     """Method used to collect all the new task information from the user
 
@@ -35,19 +64,14 @@ async def get_new_task_info() -> dict:
     new_task["days"] = await inquirer.checkbox(
         message="Pick your recurring days:",
         cycle=True,
-        choices=[
-            "Sunday",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-        ],
+        choices=[Choice(days_of_week, "Every day")]
+        + [Choice(d, d) for d in days_of_week],
         validate=lambda result: len(result) >= 1,
         invalid_message="should be at least 1 selection",
         instruction="(select at least 1)",
     ).execute_async()
+
+    new_task["days"] = flatten_array(new_task["days"])
 
     new_task["project_id"] = await inquirer.select(
         message="Select the project to which you want to assign these tasks:",

@@ -15,6 +15,7 @@ async def create_new_tasks():
     """Method used to manage the creation of a new recurring task"""
     new_task = await get_new_task_info()
     await create_multiple_tasks(new_task=new_task)
+    print("Tasks successfully created!")
 
 
 async def get_recurring_tasks_df() -> pd.DataFrame:
