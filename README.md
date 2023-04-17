@@ -23,6 +23,14 @@ Tested with:
 
 ## How to run
 
+#### Generate token API key
+
+By following the [official documentation](https://todoist.com/help/articles/find-your-api-token) generate your API key and export it in `TOKEN` env var by running:
+
+```bash
+export TOKEN=<MY_TOKEN>
+```
+
 #### Setup venv
 
 ```bash
